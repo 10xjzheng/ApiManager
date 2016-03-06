@@ -2,7 +2,7 @@
 /* @var $this yii\web\View */
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-$this->title = '新建项目';
+$this->title = '新建接口';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
@@ -46,7 +46,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td class="form-group has-error">
                     <input type="text" class="form-control" name="p[name][]" placeholder="参数名" required="required">
                 </td>
-                <td class="form-group has-error"><input type="text" class="form-control" name="p[paramType][]" placeholder="参数类型" required="required"></td>
+                <td class="form-group has-error">
+                    <select class="form-control" name="p[paramType][]">
+                        <option value="1">string</option>
+                        <option value="2">int</option>
+                        <option value="3">float</option>
+                        <option value="4">list</option>
+                    </select>
+                </td>
                 <td>
                     <select class="form-control" name="p[type][]">
                         <option value="Y">Y</option>
@@ -54,6 +61,38 @@ $this->params['breadcrumbs'][] = $this->title;
                     </select>
                 </td>
                 <td><input type="text" class="form-control" name="p[default][]" placeholder="缺省值"></td>
+                <td><textarea name="p[des][]" rows="1" class="form-control" style="height: 34px;" placeholder="描述"></textarea></td>
+                <td><button type="button" class="btn btn-danger" onclick="del(this)">删除</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+     <div class="col-xs-12 form-group" style="margin-top:50px">
+        <h4>返回参数</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="col-md-3">参数名</th>
+                <th class="col-md-2">参数类型</th>
+                <th class="col-md-4">描述</th>
+                <th class="col-md-1">
+                    <button type="button" class="btn btn-success" onclick="addReturnParams()">新增</button>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="returnParameter">
+            <tr>
+                <td class="form-group has-error">
+                    <input type="text" class="form-control" name="p[name][]" placeholder="参数名" required="required">
+                </td>
+                <td class="form-group has-error">
+                     <select class="form-control" name="p[paramType][]">
+                        <option value="1">string</option>
+                        <option value="2">int</option>
+                        <option value="3">float</option>
+                        <option value="4">list</option>
+                    </select>
+                </td>
                 <td><textarea name="p[des][]" rows="1" class="form-control" style="height: 34px;" placeholder="描述"></textarea></td>
                 <td><button type="button" class="btn btn-danger" onclick="del(this)">删除</button></td>
             </tr>
@@ -73,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
             var $html ='<tr>' +
                 '<td class="form-group has-error" ><input type="text" class="form-control has-error" name="p[name][]" placeholder="参数名" required="required"></td>' +
                 '<td class="form-group has-error">' +
-                '<input type="text" class="form-control" name="p[paramType][]" placeholder="参数类型" required="required"></td>' +
+                '<select class="form-control" name="p[paramType][]" ><option value="1">string</option><option value="2">int</option><option value="3">float</option><option value="4">list</option></select></td>' +
                 '<td>' +
                 '<select class="form-control" name="p[type][]">' +
                 '<option value="Y">Y</option> <option value="N">N</option>' +
@@ -90,8 +129,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 '</tr >';
             $('#parameter').append($html);
         }
-        function del(obj){
+         
+        function del (obj) {
             $(obj).parents('tr').remove();
+        }
+
+        function addReturnParams(){
+            var $html ='<tr>' +
+                '<td class="form-group has-error" ><input type="text" class="form-control has-error" name="p[name][]" placeholder="参数名" required="required"></td>' +
+                '<td class="form-group has-error">' +
+                '<select class="form-control" name="p[paramType][]" ><option value="1">string</option><option value="2">int</option><option value="3">float</option><option value="4">list</option></select></td>' +
+                '<td>' +
+                '<textarea name="p[des][]" rows="1" class="form-control" style="height: 34px;" placeholder="描述"></textarea>' +
+                '</td>' +
+                '<td>' +
+                '<button type="button" class="btn btn-danger" onclick="del(this)">删除</button>' +
+                '</td>' +
+                '</tr >';
+            $('#returnParameter').append($html);
+        }
+
+        function listAction (obj) {
+            if(obj.value==4){
+                
+            }
         }
     </script>
 </div>
