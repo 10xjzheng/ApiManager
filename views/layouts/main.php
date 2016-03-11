@@ -8,7 +8,6 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -54,20 +53,10 @@ AppAsset::register($this);
     NavBar::end();
     ?>
     <div class="container">
-        <div class="col-xs-3 main-left magin-left-0 pull-left padding-5">
-            <form action="" method="post">
-                <div style="margin:20px 0 0 0;">
-                    <input type="text" value="" class="form-control"  placeholder="Search...">
-                    <?= Html::a('新建项目', ['api/add-project'], ['class' => 'btn btn-success pull-right magin-top-10']) ?>
-                </div>
-            </form>
-        </div>
-        <div class="col-xs-9 magin-left-0 pull-left padding-0">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= $content ?>
-        </div>
     </div>
     
 </div>

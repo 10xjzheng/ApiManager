@@ -20,17 +20,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'placeholder' => $model->getAttributeLabel('工程名称'),
     ],
     ])->label(false);
+    echo $form->field($model, 'projectHost', [
+    'inputOptions' => [
+        'placeholder' => $model->getAttributeLabel('接口前缀'),
+    ],
+    ])->label(false);
     echo $form->field($model, 'discribe', [
     'inputOptions' => [
         'placeholder' => $model->getAttributeLabel('描述'),
     ],
     ])->label(false);
     ?>
-        <div class="form-group">
-            <div class="col-xs-12">
-                <?= Html::submitButton('保存', ['class' => 'btn btn-primary pull-left', 'name' => 'login-button']) ?>
-            </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <?= Html::submitButton('保存', ['class' => 'btn btn-primary pull-left', 'name' => 'login-button']) ?>
         </div>
+    </div>
 
     <?php ActiveForm::end(); ?>
 

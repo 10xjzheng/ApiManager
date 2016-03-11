@@ -5,15 +5,31 @@ use yii\bootstrap\ActiveForm;
 $this->title = '接口信息';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="col-xs-12">
-    <div class="col-xs-12 padding-5" style="background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
-        <div class="col-xs-12"><span class="pull-right">最后修改者: root  2016-03-02 18:00:16</span></div>
-        <div class="col-xs-12"><h4><b>用户登录</b>-------编号: <span class="cl-red">001</span></h4> </div>
-        <div class="col-xs-12 magin-top-10">
-            <span style="background-color:#3385ff;padding:2px;color:white"><b>POST</b></span>-
-            <span style="background-color:#3385ff;padding:2px;color:white">http://bannong.ibona.cn/index.php//admin/Interface/ ThirdPartLogin</span>
+<div class="col-xs-3 main-left margin-left-0 pull-left padding-5">
+    <div>
+        <form action="" method="post">
+            <div style="margin:20px 0 0 0;">
+                <div><input type="text" value="" class="form-control"  placeholder="Search..."></div>
+                <?= Html::a('新建接口', ['api/add-api'], ['class' => 'btn btn-success pull-right margin-top-10 col-xs-5']) ?>
+                <?php
+                    foreach ($data as $key => $value) {
+                        echo '<div class="col-xs-7">'.Html::a($value->functionName, ['api/add-project'], ['class' => 'pull-left margin-top-10']).'</div>';
+                    }
+                ?>
+                
+            </div>
+        </form>
+    </div>
+</div>
+<div class="col-xs-9">
+    <div class="col-xs-12 padding-5 margin-top-10" style="background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
+        <div class="col-xs-12"><span class="pull-right">最后修改者: root -- <?=$apiInfo->lastTime?></span></div>
+        <div class="col-xs-12"><h4><b><?=$apiInfo->apiName?></b>-------编号: <span class="cl-red"><?=$apiInfo->number?></span></h4> </div>
+        <div class="col-xs-12 margin-top-10">
+            <span style="background-color:#3385ff;padding:2px;color:white"><b><?=$apiInfo->type?></b></span>-
+            <span style="background-color:#3385ff;padding:2px;color:white"><?=$apiInfo->project->projectHost?><?=$apiInfo->functionName?></span>
         </div>
-        <div class="col-xs-12 magin-top-10" ><b>描述</b>：用户的第三方登录，包括微信，qq</div>
+        <div class="col-xs-12 margin-top-10" ><b>描述</b>：<?=$apiInfo->apiDiscribe?></div>
     </div>
 
     <div class="col-xs-12 padding-5" style="margin:50px 0 0 0;background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
@@ -47,10 +63,11 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="col-xs-12 padding-5" style="margin:50px 0 0 0;background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
-    <div class="col-xs-12 magin-top-10"><button class="btn btn-primary">测试接口</button></div>
-    <div class="col-xs-12 magin-top-10">
-        <textarea class="form-control" style="min-height: 500px">
-            
-        </textarea>
+        <div class="col-xs-12 margin-top-10"><button class="btn btn-primary">测试接口</button></div>
+        <div class="col-xs-12 margin-top-10">
+            <textarea class="form-control" style="min-height: 500px">
+                
+            </textarea>
+        </div>
     </div>
 </div>
