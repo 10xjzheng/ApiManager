@@ -54,8 +54,9 @@ class ApiController extends \yii\web\Controller
         ]);
     }
 
-    public function actionApiInfo($id=null)
+    public function actionApiInfo()
     {
+        $id=$_GET['id'];
         $model=new Api();
         $data = $model::find()->where('fkProjectId=1')->all();
         if($id>0)  $apiInfo=$model::find()->with('project')->where('apiId='.$id)->one();
@@ -74,6 +75,7 @@ class ApiController extends \yii\web\Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
         }
+        //保存修改
         if (Yii::$app->request->isPost) {
             $model->userId=1;
             $model->fkProjectId=1;
@@ -85,8 +87,12 @@ class ApiController extends \yii\web\Controller
             if($model->save()) return $this->redirect(['index']);
             // Yii::$app->session->setFlash('success', '您已成功添加接口：'.$model->projectName);
         }
+        $id=$_GET['id'];
+        $apiInfo=new Api();
+        if($id>0) $apiInfo=$model::find()->with('project')->where('apiId='.$id)->one(); 
         return $this->render('addApi', [
             'model' => $model,
+            'apiInfo'=>$apiInfo
         ]);
     }
 }

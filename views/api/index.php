@@ -11,6 +11,7 @@ use yii\widgets\ListView;
         <form action="" method="post">
             <div style="margin:20px 0 0 0;">
                 <div><input type="text" value="" class="form-control"  placeholder="Search..."></div>
+                <?= Html::a('新建项目', ['api/add-project'], ['class' => 'btn btn-success pull-right margin-top-10']) ?>
                 <div>
                     <?= ListView::widget([
                     'dataProvider' => $dataProvider,
@@ -21,7 +22,7 @@ use yii\widgets\ListView;
                     'itemView' => '_item',//子视图 
                 ]) ?>
                 </div>  
-                <?= Html::a('新建项目', ['api/add-project'], ['class' => 'btn btn-success pull-right margin-top-10']) ?>
+                
             </div>
         </form>
     </div>

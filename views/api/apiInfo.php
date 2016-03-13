@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 $this->title = '接口信息';
 $this->params['breadcrumbs'][] = $this->title;
@@ -10,13 +11,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <form action="" method="post">
             <div style="margin:20px 0 0 0;">
                 <div><input type="text" value="" class="form-control"  placeholder="Search..."></div>
-                <?= Html::a('新建接口', ['api/add-api'], ['class' => 'btn btn-success pull-right margin-top-10 col-xs-5']) ?>
+                <?= Html::a('新建接口', ['api/add-api','id'=>0], ['class' => 'btn btn-success pull-right margin-top-10']) ?>
                 <?php
                     foreach ($data as $key => $value) {
-                        echo '<div class="col-xs-7">'.Html::a($value->functionName, ['api/add-project'], ['class' => 'pull-left margin-top-10']).'</div>';
+                ?>    
+                    <a href= "<?= Url::to([ 'api/api-info', 'id'=>$value->apiId]); ?>" class="pull-left col-xs-7 margin-top-10"><?=$value->functionName?></a >
+                <?php
                     }
-                ?>
-                
+                ?>   
             </div>
         </form>
     </div>
@@ -26,8 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12"><span class="pull-right">最后修改者: root -- <?=$apiInfo->lastTime?></span></div>
         <div class="col-xs-12"><h4><b><?=$apiInfo->apiName?></b>-------编号: <span class="cl-red"><?=$apiInfo->number?></span></h4> </div>
         <div class="col-xs-12 margin-top-10">
-            <span style="background-color:#3385ff;padding:2px;color:white"><b><?=$apiInfo->type?></b></span>-
-            <span style="background-color:#3385ff;padding:2px;color:white"><?=$apiInfo->project->projectHost?><?=$apiInfo->functionName?></span>
+            <span style="padding:2px;"><b><?=$apiInfo->type?></b></span>--
+            <span style="padding:2px;"><?=$apiInfo->project->projectHost?><?=$apiInfo->functionName?></span>
         </div>
         <div class="col-xs-12 margin-top-10" ><b>描述</b>：<?=$apiInfo->apiDiscribe?></div>
     </div>
@@ -37,12 +39,24 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <table class="table">
               <thead>
-                <tr><th>参数名</th><th>参数类型</th><th>必传</th><th>缺省值</th><th>描述</th><th>测试值</th></tr>
+                <tr><th>参数名</th><th>参数类型</th><th>必传</th><th>缺省值</th><th>描述</th></tr>
               </thead>
               <tbody>
-                <tr><td>userName</td><td>string</td><td>Y</td><td>null</td><td>用户名</td><td><input class="form-control"  type="text" /></td></tr>
-                <tr><td>password</td><td>string</td><td>Y</td><td>null</td><td>用户名</td><td><input class="form-control"  type="text" /></td>
+                <?php
+                    $params=unserialize($apiInfo->params);
+                    $pnum = count($params['name']);
+                    for( $i=0; $i<$pnum; $i++ ) {
+                ?>
+                <tr>
+                    <td><?=$params['name'][$i]?></td>
+                    <td><?=$params['paramType'][$i]?></td>
+                    <td><?=$params['type'][$i]?></td>
+                    <td><?=$params['default'][$i]?></td>
+                    <td><?=$params['des'][$i]?></td>
                 </tr>
+                <?php
+                    }
+                ?>
               </tbody>    
             </table>
         </div>
@@ -53,11 +67,34 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <table class="table">
               <thead>
-                <tr><th>参数名</th><th>参数类型</th><th>描述</th></tr>
+                <tr><th>参数名</th><th>参数类型</th><th>缺省值</th><th>描述</th></tr>
               </thead>
               <tbody>
-                <tr><td>userName</td><td>string</td><td>用户名</td></tr>
-                <tr><td>password</td><td>string</td><td>用户名</td></tr>
+                 <?php
+                    $params=unserialize($apiInfo->returnParams);
+                    $pnum = count($params['name']);
+                    for( $i=0; $i<$pnum; $i++ ) {
+                        if($params['parent'][$i]=="1"){
+                ?>
+                        <tr>
+                            <td><?=$params['name'][$i]?></td>
+                            <td><?=$params['paramType'][$i]?></td>
+                            <td><?=$params['default'][$i]?></td>
+                            <td><?=$params['des'][$i]?></td>
+                        </tr>
+                <?php
+                        }else{
+                ?>
+                        <tr style="text-align: center">
+                            <td><?=$params['name'][$i]?></td>
+                            <td><?=$params['paramType'][$i]?></td>
+                            <td><?=$params['default'][$i]?></td>
+                            <td><?=$params['des'][$i]?></td>
+                        </tr>
+                <?php
+                        }
+                    }
+                ?>
               </tbody>    
             </table>
         </div>

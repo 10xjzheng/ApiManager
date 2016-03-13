@@ -2,7 +2,7 @@ function add(){
     var $html ='<tr>' +
         '<td class="form-group has-error" ><input type="text" class="form-control has-error" name="p[name][]" placeholder="参数名" required="required"></td>' +
         '<td class="form-group has-error">' +
-        '<select class="form-control return-array" name="p[paramType][]" ><option value="1">string</option><option value="2">int</option><option value="3">float</option><option value="4">array</option></select></td>' +
+        '<select class="form-control return-array" name="p[paramType][]" ><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="array">array</option></select></td>' +
         '<td>' +
         '<select class="form-control" name="p[type][]">' +
         '<option value="Y">Y</option> <option value="N">N</option>' +
@@ -21,15 +21,17 @@ function add(){
 }
  
 $(document).on("click",".delete-tr",function() {
+    var lineNum=$(this).parents('tr').closest('tr').index();
+    $("#r"+lineNum).parent().remove(); 
     $(this).parent().parent().remove();
 });
 function addRow(tableId) {
     var parent=0;
     if(tableId=='r') parent=1;
     var html ='<tr>' +
-        '<td class="form-group has-error" ><input name="r[parent][]" type="hidden" value="'+parent+'" /><input type="text" class="form-control has-error" name="r[name][]" placeholder="参数名" required="required"></td>' +
+        '<td class="form-group has-error" ><input name="r[tableName][]" type="hidden" value="'+tableId+'" /><input name="r[parent][]" type="hidden" value="'+parent+'" /><input type="text" class="form-control has-error" name="r[name][]" placeholder="参数名" required="required"></td>' +
         '<td class="form-group has-error">' +
-        '<select class="form-control return-array" name="r[paramType][]" ><option value="1">string</option><option value="2">int</option><option value="3">float</option><option value="4">array</option></select></td>' +
+        '<select class="form-control return-array" name="r[paramType][]" ><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="array">array</option></select></td>' +
         '<td class="form-group" ><input type="text" class="form-control" name="r[default][]" placeholder="缺省值" ></td>' +
         '<td>' +
         '<textarea name="r[des][]" rows="1" class="form-control" style="height: 34px;" placeholder="描述"></textarea>' +
@@ -43,7 +45,7 @@ function addRow(tableId) {
 $(document).on("change",".return-array",function() {
     var lineNum=$(this).parents('tr').closest('tr').index();
     console.log(lineNum);
-    if($(this).val()==4){
+    if($(this).val()=="array"){
         $(this).parents('tr').after('<tr><td colspan="4">\
             <table class="table children-table" id="r'+lineNum+'">\
                 <thead>\
@@ -60,14 +62,14 @@ $(document).on("change",".return-array",function() {
                 <tbody>\
                 <tr>\
                     <td class="form-group has-error">\
-                        <input name="r[parent][]" type="hidden" value="0" /><input type="text" class="form-control" name="r[name][]" placeholder="参数名" required="required">\
+                       <input name="r[tableName][]" type="hidden" value="r'+lineNum+'" /><input name="r[parent][]" type="hidden" value="0" /><input type="text" class="form-control" name="r[name][]" placeholder="参数名" required="required">\
                     </td>\
                     <td class="form-group has-error">\
                          <select class="form-control" name="r[paramType][]">\
-                            <option value="1">string</option>\
-                            <option value="2">int</option>\
-                            <option value="3">float</option>\
-                            <option value="4">array</option>\
+                            <option value="string">string</option>\
+                            <option value="int">int</option>\
+                            <option value="float">float</option>\
+                            <option value="array">array</option>\
                         </select>\
                     </td>\
                     <td class="form-group has-error">\
@@ -83,3 +85,4 @@ $(document).on("change",".return-array",function() {
         $("#r"+lineNum).parent().remove(); 
     }
 });
+// $(window).bind('beforeunload',function(){return '您输入的内容尚未保存!';});
