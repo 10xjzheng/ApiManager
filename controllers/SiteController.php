@@ -46,12 +46,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
@@ -74,47 +68,4 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-    /**
-     * hello world
-     * @param  string $message [description]
-     * @return [type]          [description]
-     */
-    public function actionSay($message = 'Hello')
-    {
-        return $this->render('say', ['message' => $message]);
-    }
- /**
- * model测试 校检
- * @return [type] [description]
- */
-    public function actionEntry()
-    {
-        $model = new EntryForm;
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // 验证 $model 收到的数据
-            // 做些有意义的事 ...
-            return $this->render('entry-confirm', ['model' => $model]);
-        } else {
-            // 无论是初始化显示还是数据验证错误
-            return $this->render('entry', ['model' => $model]);
-        }
-    }
 }

@@ -2,14 +2,18 @@
 /* @var $this yii\web\View */
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
-$this->title = '新建接口';
+$this->title = $projectName;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h4>新建项目</h4>
+<?php include('_searchApi.php');?>
+<div class="col-xs-9">
+    <h4>新建接口</h4>
     <?php $form = ActiveForm::begin([
-        'id' => 'add-api-form',
+        'id' => 'api-form',
+        'method'=>"POST",
+        'action'=>"?r=api/add-api",
         'options' => ['class' => 'form-horizontal'],
         'fieldConfig' => [
             'template' => "{label}\n<div class=\"col-xs-12\">{input}</div>\n<div class=\"col-xs-12\">{error}</div>",
@@ -17,18 +21,20 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); 
     ?>
+    <input type="hidden" value="<?=$_GET['apiId']?>" name="apiId" />
+    <input type="hidden" value="<?=$_GET['id']?>" name="id" />
     <?= $form->field($model, 'number',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">接口编号</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口编号'),'value'=>$apiInfo->number],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口编号,如：001'),'value'=>$apiInfo->number],])->label(false)->textInput(['autofocus' => true]) ?>
      <?= $form->field($model, 'apiName',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">接口名称</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口名称'),'value'=>$apiInfo->apiName],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口名称,如：用户登录'),'value'=>$apiInfo->apiName],])->label(false)->textInput(['autofocus' => true]) ?>
      <?= $form->field($model, 'functionName',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">方法名称</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('方法名称'),'value'=>$apiInfo->functionName],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('方法名称,如：UserLogin'),'value'=>$apiInfo->functionName],])->label(false)->textInput(['autofocus' => true]) ?>
     <?= $form->field($model, 'apiDiscribe',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">接口描述</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口描述'),'value'=>$apiInfo->apiDiscribe],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口描述,如：实现APP登录，包括第三方登录'),'value'=>$apiInfo->apiDiscribe],])->label(false)->textInput(['autofocus' => true]) ?>
      <?php $arr=[0=>['key'=>'GET','value'=>'GET'],1=>['key'=>'POST','value'=>'POST']];$model->type=$apiInfo->type;  ?>
      <?=$form->field($model, 'type')->label(false)->dropDownList(ArrayHelper::map($arr, 'key', 'value'), ['class'=>'col-xs-12 form-control']) ?>
     <div class="col-xs-12 form-group">
@@ -112,67 +118,100 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php
                 $params=unserialize($apiInfo->returnParams);
                 $pnum = count($params['name']);
+                $num=0;
                 for( $i=0; $i<$pnum; $i++ ) {
                     if($params['parent'][$i]=="1"){
+                        $tableName=$params['tableName'][$i];
             ?>
-                    <tr>
-                        <td>
-                        <input name="r[parent][]" type="hidden" value="<?=$params['parent'][$i]?>" />
-                        <input name="r[tableName][]" type="hidden" value="<?=$params['tableName'][$i]?>" />
-                        <input type="text" class="form-control" name="r[name][]" value="<?=$params['name'][$i]?>" placeholder="参数名" required="required">
-                        </td>
-                        <td>
-                            <select class="form-control return-array" name="r[paramType][]">
-                            <?php
-                                foreach ($array0 as $key => $value) {
-                                    if($value==$params['paramType'][$i])
-                                        echo '<option selected value="'.$value.'">'.$value.'</option>';
-                                    else 
-                                        echo '<option value="'.$value.'">'.$value.'</option>';
-                                }
-                            ?>
-                            </select>
-                        </td>
-                        <td><input type="text" class="form-control" name="r[default][]" placeholder="缺省值" value="<?=$params['default'][$i]?>" ></td>
-                        <td><input type="text" class="form-control" name="r[des][]" placeholder="描述" value="<?=$params['des'][$i]?>" ></td>
-                    </tr>
+                        <tr>
+                            <td>
+                            <input name="r[parent][]" type="hidden" value="<?=$params['parent'][$i]?>" />
+                            <input name="r[tableName][]" type="hidden" value="<?=$params['tableName'][$i]?>" />
+                            <input type="text" class="form-control" name="r[name][]" value="<?=$params['name'][$i]?>" placeholder="参数名" required="required">
+                            </td>
+                            <td>
+                                <select class="form-control return-array" name="r[paramType][]">
+                                <?php
+                                    foreach ($array0 as $key => $value) {
+                                        if($value==$params['paramType'][$i])
+                                            echo '<option selected value="'.$value.'">'.$value.'</option>';
+                                        else 
+                                            echo '<option value="'.$value.'">'.$value.'</option>';
+                                    }
+                                ?>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" name="r[default][]" placeholder="缺省值" value="<?=$params['default'][$i]?>" ></td>
+                            <td><input type="text" class="form-control" name="r[des][]" placeholder="描述" value="<?=$params['des'][$i]?>" ></td>
+                            <td><button type="button" class="btn btn-danger delete-tr" >删除</button></td>
+                        </tr>
                     <?php
                             }else{
-                    ?>
+                                if($tableName==$params['tableName'][$i]&&$num==0){
+                                    $num++;
+                                    echo '<tr><td colspan="4"><table class="table children-table" id="'.$tableName.'"><thead><tr>
+                                    <th class="col-md-3">参数名</th>
+                                    <th class="col-md-2">参数类型</th>
+                                    <th class="col-md-2">缺省值</th>
+                                    <th class="col-md-4">描述</th>
+                                    <th class="col-md-1">
+                                    <button type="button" class="btn btn-success" onclick="addRow(\''.$tableName.'\')">新增</button>
+                                    </th></tr></thead><tbody>';
+
+                                }
+                                ?>
+                                 <tr>
+                                    <td>
+                                    <input name="r[parent][]" type="hidden" value="<?=$params['parent'][$i]?>" />
+                                    <input name="r[tableName][]" type="hidden" value="<?=$params['tableName'][$i]?>" />
+                                    <input type="text" class="form-control" name="r[name][]" value="<?=$params['name'][$i]?>" placeholder="参数名" required="required">
+                                    </td>
+                                    <td>
+                                        <select class="form-control return-array" name="r[paramType][]">
+                                        <?php
+                                            foreach ($array0 as $key => $value) {
+                                                if($value==$params['paramType'][$i])
+                                                    echo '<option selected value="'.$value.'">'.$value.'</option>';
+                                                else 
+                                                    echo '<option value="'.$value.'">'.$value.'</option>';
+                                            }
+                                        ?>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" class="form-control" name="r[default][]" placeholder="缺省值" value="<?=$params['default'][$i]?>" ></td>
+                                    <td><input type="text" class="form-control" name="r[des][]" placeholder="描述" value="<?=$params['des'][$i]?>" ></td>
+                                    <td><button type="button" class="btn btn-danger delete-tr" >删除</button></td>
+                                </tr>
+                                <?php
+                                if($pnum<=$i+1) echo '</tbody></table></td></tr>';//避免数组越界
+                                else if($tableName!=$params['tableName'][$i+1]){
+                                    echo '</tbody></table></td></tr>';
+                                    $num=0;
+                                }
+                                ?>
+                                
                                 
                     <?php
                             }
                         }
                     ?>
-            <tr>
-                <td class="form-group has-error">
-                    <input name="r[parent][]" type="hidden" value="1" />
-                    <input name="r[tableName][]" type="hidden" value="r0" />
-                    <input type="text" class="form-control" name="r[name][]" placeholder="参数名" required="required">
-                </td>
-                <td class="form-group has-error">
-                     <select class="form-control return-array" name="r[paramType][]">
-                        <option value="string">string</option>
-                        <option value="int">int</option>
-                        <option value="float">float</option>
-                        <option value="array">array</option>
-                    </select>
-                </td>
-                <td class="form-group">
-                    <input type="text" class="form-control" name="r[default][]" placeholder="缺省值" >
-                </td>
-                <td><textarea name="r[des][]" rows="1" class="form-control" style="height: 34px;" placeholder="描述"></textarea></td>
-                <td><button type="button" class="btn btn-danger delete-tr" >删除</button></td>
-            </tr>
+            
             </tbody>
         </table>
     </div>
     <div></div>
     <div class="form-group">
         <div class="col-xs-12" style="margin-bottom: 15px;">
-            <?= Html::submitButton('保存', ['class' => 'btn btn-primary pull-left', 'name' => 'login-button']) ?>
+            <?= Html::Button('保存', ['class' => 'btn btn-primary pull-left','onclick'=>'changeValue()','name' => 'login-button']) ?>
         </div>
     </div>
 
     <?php ActiveForm::end(); ?>
 </div>
+<script>
+var flag=0;
+window.onbeforeunload = function(event){   
+    console.log(flag);
+    if(flag==0) return '您可能有数据没有保存'; 
+};
+</script>

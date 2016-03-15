@@ -21,15 +21,22 @@ function add(){
 }
  
 $(document).on("click",".delete-tr",function() {
-    var lineNum=$(this).parents('tr').closest('tr').index();
-    $("#r"+lineNum).parent().remove(); 
+    var lineNum=$(this).closest('tr').index();
+    console.log(lineNum);
+    $("#r"+lineNum).parent().parent().remove(); 
     $(this).parent().parent().remove();
 });
 function addRow(tableId) {
     var parent=0;
-    if(tableId=='r') parent=1;
+    var lineNum=$("#r>tbody>tr").length;
+    tableName="r"+lineNum;
+    if(tableId=='r'){
+        parent=1;
+        tableName="r"+lineNum;
+    }else tableName=tableId;
+    console.log(tableName);
     var html ='<tr>' +
-        '<td class="form-group has-error" ><input name="r[tableName][]" type="hidden" value="'+tableId+'" /><input name="r[parent][]" type="hidden" value="'+parent+'" /><input type="text" class="form-control has-error" name="r[name][]" placeholder="参数名" required="required"></td>' +
+        '<td class="form-group has-error" ><input name="r[tableName][]" type="hidden" value="'+tableName+'" /><input name="r[parent][]" type="hidden" value="'+parent+'" /><input type="text" class="form-control has-error" name="r[name][]" placeholder="参数名" required="required"></td>' +
         '<td class="form-group has-error">' +
         '<select class="form-control return-array" name="r[paramType][]" ><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="array">array</option></select></td>' +
         '<td class="form-group" ><input type="text" class="form-control" name="r[default][]" placeholder="缺省值" ></td>' +
@@ -43,7 +50,7 @@ function addRow(tableId) {
     $("#"+tableId).append(html);
 }
 $(document).on("change",".return-array",function() {
-    var lineNum=$(this).parents('tr').closest('tr').index();
+    var lineNum=$(this).closest('tr').index();
     console.log(lineNum);
     if($(this).val()=="array"){
         $(this).parents('tr').after('<tr><td colspan="4">\
@@ -85,4 +92,73 @@ $(document).on("change",".return-array",function() {
         $("#r"+lineNum).parent().remove(); 
     }
 });
+
+function delApi(id,apiId){
+    if(confirm("确定要删除此接口？")){
+      $.post("?r=api/del",{"apiId":apiId},function(data,textStatus){
+            var obj =JSON.parse(data);; 
+            console.log(obj);
+            if(obj.code==0){
+                location.href="?r=api/api-info&id="+id+"&apiId=0";
+            }
+            else alert('删除失败');
+      });
+    }
+}
 // $(window).bind('beforeunload',function(){return '您输入的内容尚未保存!';});
+function format(txt,compress){/* 格式化JSON源码(对象转换为JSON文本) */  
+    var indentChar = '    ';   
+    if(/^\s*$/.test(txt)){   
+        alert('数据为空,无法格式化! ');   
+        return;   
+    }   
+    try{var data=eval('('+txt+')');}   
+    catch(e){   
+        return txt; 
+    };   
+    var draw=[],last=false,This=this,line=compress?'':'\n',nodeCount=0,maxDepth=0;   
+       
+    var notify=function(name,value,isLast,indent/*缩进*/,formObj){   
+        nodeCount++;/*节点计数*/  
+        for (var i=0,tab='';i<indent;i++ )tab+=indentChar;/* 缩进HTML */  
+        tab=compress?'':tab;/*压缩模式忽略缩进*/  
+        maxDepth=++indent;/*缩进递增并记录*/  
+        if(value&&value.constructor==Array){/*处理数组*/  
+            draw.push(tab+(formObj?('"'+name+'":'):'')+'['+line);/*缩进'[' 然后换行*/  
+            for (var i=0;i<value.length;i++)   
+                notify(i,value[i],i==value.length-1,indent,false);   
+            draw.push(tab+']'+(isLast?line:(','+line)));/*缩进']'换行,若非尾元素则添加逗号*/  
+        }else   if(value&&typeof value=='object'){/*处理对象*/  
+                draw.push(tab+(formObj?('"'+name+'":'):'')+'{'+line);/*缩进'{' 然后换行*/  
+                var len=0,i=0;   
+                for(var key in value)len++;   
+                for(var key in value)notify(key,value[key],++i==len,indent,true);   
+                draw.push(tab+'}'+(isLast?line:(','+line)));/*缩进'}'换行,若非尾元素则添加逗号*/  
+            }else{   
+                    if(typeof value=='string')value='"'+value+'"';   
+                    draw.push(tab+(formObj?('"'+name+'":'):'')+value+(isLast?'':',')+line);   
+            };   
+    };   
+    var isLast=true,indent=0;   
+    notify('',data,isLast,indent,false);   
+    return draw.join('');   
+}  
+
+function TestApi(){
+    var map = {}; 
+    var text='';
+    $("#test-form input").map(function(){ 
+        map[$(this).attr("name")]=$(this).val();
+        return 0;
+    }).get();  
+    map.type = $("#test-form").attr("method");
+    map.url = $("#url").text();
+    $.post("?r=api/request",map,function(data,textStatus){
+        $("#jsonData").val(format(data,''));
+        //alert(data);
+    });
+}
+function changeValue(){
+    flag=1;
+    $("#api-form").submit();
+}

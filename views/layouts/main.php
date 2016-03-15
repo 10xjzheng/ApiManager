@@ -40,7 +40,7 @@ AppAsset::register($this);
                 ['label' => '登录', 'url' => ['/site/login']]
             ) : (
                 '<li>'
-                . Html::beginForm(['/api/logout'], 'post')
+                . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     '退出登录 (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link margin-top-num']

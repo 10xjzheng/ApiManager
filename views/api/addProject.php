@@ -5,7 +5,8 @@ use yii\bootstrap\ActiveForm;
 $this->title = '新建项目';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
+<?php include('_searchProject.php');?>
+<div class="col-xs-9">
     <h4>新建项目</h4>
     <?php $form = ActiveForm::begin([
         'id' => 'add-project-form',
