@@ -25,18 +25,6 @@ class ApiController extends \yii\web\Controller
             return false;
         }
     }
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
     /**
      * 首页
      */
@@ -62,16 +50,7 @@ class ApiController extends \yii\web\Controller
     public function actionAddProject()
     {
         $model = new Project();
-        $query = Project::find()->where('projectId > 0');
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'sort' => ['defaultOrder' => ['projectId' => SORT_DESC]],
-            'pagination' => [
-                'pageSize' => 100,
-            ],
-        ]);
-        $model->load(Yii::$app->request->post());
-        
+        $data = Project::find()->where('projectId > 0')->orderBy("projectId desc")->all();
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
@@ -84,8 +63,7 @@ class ApiController extends \yii\web\Controller
     
         return $this->render('addProject', [
             'model' => $model,
-            'dataProvider' => $dataProvider,
-
+            'data' => $data,
         ]);
     }
    /**
@@ -93,16 +71,19 @@ class ApiController extends \yii\web\Controller
      */
     public function actionApiInfo()
     {
-        $apiId=$_GET['apiId'];
+        if(!isset($_GET['id'])) {
+            throw new \yii\web\UnauthorizedHttpException('Missing Params!');
+            return false;
+        }
         $model=new Api();
-        $data = $model::find()->where('fkProjectId='.$_GET['id'])->all();
-        if($apiId>0)  $model=$model::find()->with('project')->where('apiId='.$apiId)->one();
-        else $model=$model::find()->with('project')->where('fkProjectId='.$_GET['id'])->one();
-        // var_dump($apiInfo-project);exit;
-        $project = new Project();
+        if(!empty($_GET['apiId'])){
+            $apiId=$_GET['apiId'];
+            $model=$model::find()->with('project')->where('apiId='.$apiId)->one();
+        }else $model=$model::find()->with('project')->where('fkProjectId='.$_GET['id'])->one();
+        $data = Api::find()->where('fkProjectId='.$_GET['id'])->all();
         $projectName = Project::findOne($_GET['id'])->projectName;
         $url='';
-        if(count($data)==0) return $this->redirect(['add-api','id'=>$_GET['id'],'apiId'=>$apiId]);
+        if(count($data)==0) return $this->redirect(['add-api','id'=>$_GET['id'],'apiId'=>$_GET['apiId']]);
         $logs=new ModifyLogs();
         $logsData = $logs::find()->where('apiId='.$model->apiId)->orderBy('editTime desc')->all();
         return $this->render('apiInfo', [
@@ -147,10 +128,10 @@ class ApiController extends \yii\web\Controller
                 return $this->redirect(['api-info','id'=>$model->fkProjectId,'apiId'=>$model->apiId]);
             }else{
                 $transaction->rollBack();
-                throw new \yii\web\UnauthorizedHttpException('操作失败');
+                throw new \yii\web\UnauthorizedHttpException('Missing Params!');
             }
         }
-        
+        //展示添加或编辑页面
         if(isset($_GET['id'])&&isset($_GET['apiId'])){
             $project = new Project();
             $data = $model::find()->where('fkProjectId='.$_GET['id'])->all();       
@@ -163,7 +144,7 @@ class ApiController extends \yii\web\Controller
                 'projectName'=>$projectName,
             ]);
         }else{
-            throw new \yii\web\ErrorAction('Missing Params!');
+            throw new \yii\web\UnauthorizedHttpException('Missing Params!');
         }
     }
     /**

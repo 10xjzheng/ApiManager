@@ -64,5 +64,10 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-
+    public function actionError()
+    {
+        if (\Yii::$app->exception !== null) {
+            return $this->render('error', ['exception' => \Yii::$app->exception]);
+        }
+    }
 }
