@@ -1,3 +1,4 @@
+// 请求参数添加一行
 function add(){
     var $html ='<tr>' +
         '<td class="form-group has-error" ><input type="text" class="form-control has-error" name="p[name][]" placeholder="参数名" required="required"></td>' +
@@ -19,13 +20,14 @@ function add(){
         '</tr >';
     $('#parameter').append($html);
 }
- 
+ // 删除行
 $(document).on("click",".delete-tr",function() {
     var lineNum=$(this).closest('tr').index();
     console.log(lineNum);
     $("#r"+lineNum).parent().parent().remove(); 
     $(this).parent().parent().remove();
 });
+// 返回参数的表格添加一行
 function addRow(tableId) {
     var parent=0;
     var lineNum=$("#r>tbody>tr").length;
@@ -49,6 +51,7 @@ function addRow(tableId) {
         '</tr >';
     $("#"+tableId).append(html);
 }
+// 返回参数为array，添加一个表格
 $(document).on("change",".return-array",function() {
     var lineNum=$(this).closest('tr').index();
     console.log(lineNum);
@@ -96,8 +99,7 @@ $(document).on("change",".return-array",function() {
 function delApi(id,apiId){
     if(confirm("确定要删除此接口？")){
       $.post("?r=api/del",{"apiId":apiId},function(data,textStatus){
-            var obj =JSON.parse(data);; 
-            console.log(obj);
+            var obj =JSON.parse(data);
             if(obj.code==0){
                 location.href="?r=api/api-info&id="+id+"&apiId=0";
             }
@@ -143,7 +145,7 @@ function format(txt,compress){/* 格式化JSON源码(对象转换为JSON文本) 
     notify('',data,isLast,indent,false);   
     return draw.join('');   
 }  
-
+// 测试接口
 function TestApi(){
     var map = {}; 
     var text='';
@@ -151,14 +153,48 @@ function TestApi(){
         map[$(this).attr("name")]=$(this).val();
         return 0;
     }).get();  
-    map.type = $("#test-form").attr("method");
+    map.methodType = $("#test-form").attr("method");
     map.url = $("#url").text();
     $.post("?r=api/request",map,function(data,textStatus){
         $("#jsonData").val(format(data,''));
         //alert(data);
     });
 }
-function changeValue(){
-    flag=1;
-    $("#api-form").submit();
+
+// 查看logs
+$(document).on('click','#readLogs',function(){
+    if($(this).hasClass('native')){   
+        $(this).removeClass('native');
+        $(".glyphicon").attr('class','glyphicon glyphicon-minus');
+        $("#logsData").slideDown(600);
+    }else{
+        $(".glyphicon").attr('class','glyphicon glyphicon-plus');
+        $("#logsData").slideUp(600);
+        $(this).addClass('native');
+    }
+});
+
+//
+ function search(keywords,type){
+    $.post("?r=api/search",{"keywords":keywords,"type":type},function(data,textStatus){
+        if(type==1){
+            $("#api-list").html('');
+            var html="";
+            data = JSON.parse(data);
+            $.each(eval(data), function(i, item) {  
+                html+='<a class="pull-left col-xs-7 margin-top-10" href="?r=api/api-info&id='+item.fkProjectId+'&apiId='+item.apiId+'">'
+                +item.number+'--'+item.apiName+'</a>';
+            });
+            $("#api-list").append(html);
+        }else{
+            $("#project-list").html('');
+            var html="";
+            data = JSON.parse(data);
+            $.each(eval(data), function(i, item) {  
+                html+='<a class="pull-left col-xs-7 margin-top-10" href="?r=api/api-info&id='+item.projectId+'&apiId=0">'
+                +'<span class="glyphicon glyphicon-file">'+item.projectName+'</a>';
+            });
+            $("#project-list").append(html);
+        }
+    });
 }

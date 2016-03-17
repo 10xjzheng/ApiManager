@@ -21,21 +21,21 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); 
     ?>
-    <input type="hidden" value="<?=$_GET['apiId']?>" name="apiId" />
-    <input type="hidden" value="<?=$_GET['id']?>" name="id" />
+   <input type="hidden" value="<?=$_GET['apiId']?>" name="apiId" />
+   <input type="hidden" value="<?=$_GET['id']?>" name="id" />
     <?= $form->field($model, 'number',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">接口编号</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口编号,如：001'),'value'=>$apiInfo->number],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口编号,如：001'),'value'=>$model->number],])->label(false)->textInput(['autofocus' => true]) ?>
      <?= $form->field($model, 'apiName',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">接口名称</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口名称,如：用户登录'),'value'=>$apiInfo->apiName],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口名称,如：用户登录'),'value'=>$model->apiName],])->label(false) ?>
      <?= $form->field($model, 'functionName',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">方法名称</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('方法名称,如：UserLogin'),'value'=>$apiInfo->functionName],])->label(false)->textInput(['autofocus' => true]) ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('方法名称,如：UserLogin'),'value'=>$model->functionName],])->label(false)?>
     <?= $form->field($model, 'apiDiscribe',[
     'inputTemplate' => '<div class="input-group"><span class="input-group-addon">接口描述</span>{input}</div>',
-    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口描述,如：实现APP登录，包括第三方登录'),'value'=>$apiInfo->apiDiscribe],])->label(false)->textInput(['autofocus' => true]) ?>
-     <?php $arr=[0=>['key'=>'GET','value'=>'GET'],1=>['key'=>'POST','value'=>'POST']];$model->type=$apiInfo->type;  ?>
+    'inputOptions' => ['placeholder' => $model->getAttributeLabel('接口描述,如：实现APP登录，包括第三方登录'),'value'=>$model->apiDiscribe],])->label(false) ?>
+     <?php $arr=[0=>['key'=>'GET','value'=>'GET'],1=>['key'=>'POST','value'=>'POST']];$model->type=$model->type;  ?>
      <?=$form->field($model, 'type')->label(false)->dropDownList(ArrayHelper::map($arr, 'key', 'value'), ['class'=>'col-xs-12 form-control']) ?>
     <div class="col-xs-12 form-group">
         <h4>请求参数</h4>
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody id="parameter">
             <?php
-                $params=unserialize($apiInfo->params);
+                $params=unserialize($model->params);
                 $pnum = count($params['name']);
                 $array0=['string','int','float','array'];
                 $array1=['Y','N'];
@@ -102,6 +102,10 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
      <div class="col-xs-12 form-group" style="margin-top:50px">
         <h4>返回参数</h4>
+        <h5 style="color:red">
+        <div>默认返回Json形式统一为：{"appStatus":{"errorCode":1,"message":tips },"content":[]}</div>
+        <div> errorCode的值为0表示操作成功，1表示操作失败，message是提示信息，下面配置的是content里需要返回的参数信息。</div>
+        </h5> 
         <table class="table" id="r">
             <thead>
             <tr>
@@ -116,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody >
             <?php
-                $params=unserialize($apiInfo->returnParams);
+                $params=unserialize($model->returnParams);
                 $pnum = count($params['name']);
                 $num=0;
                 for( $i=0; $i<$pnum; $i++ ) {
@@ -124,12 +128,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         $tableName=$params['tableName'][$i];
             ?>
                         <tr>
-                            <td>
-                            <input name="r[parent][]" type="hidden" value="<?=$params['parent'][$i]?>" />
+                            <td class="form-group has-error" >
+                            <input name="r[parent][]" type="hidden" value="<?=$params['parent'][$i]?>" required="required"/>
                             <input name="r[tableName][]" type="hidden" value="<?=$params['tableName'][$i]?>" />
                             <input type="text" class="form-control" name="r[name][]" value="<?=$params['name'][$i]?>" placeholder="参数名" required="required">
                             </td>
-                            <td>
+                            <td class="form-group has-error" >
                                 <select class="form-control return-array" name="r[paramType][]">
                                 <?php
                                     foreach ($array0 as $key => $value) {
@@ -161,12 +165,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 }
                                 ?>
                                  <tr>
-                                    <td>
+                                    <td class="form-group has-error" >
                                     <input name="r[parent][]" type="hidden" value="<?=$params['parent'][$i]?>" />
                                     <input name="r[tableName][]" type="hidden" value="<?=$params['tableName'][$i]?>" />
                                     <input type="text" class="form-control" name="r[name][]" value="<?=$params['name'][$i]?>" placeholder="参数名" required="required">
                                     </td>
-                                    <td>
+                                    <td class="form-group has-error" >
                                         <select class="form-control return-array" name="r[paramType][]">
                                         <?php
                                             foreach ($array0 as $key => $value) {
@@ -199,19 +203,12 @@ $this->params['breadcrumbs'][] = $this->title;
             </tbody>
         </table>
     </div>
-    <div></div>
+    <div><textarea class="form-control" name="log" required="required" style="min-height:50px" placeholder="日志"></textarea></div>
     <div class="form-group">
-        <div class="col-xs-12" style="margin-bottom: 15px;">
-            <?= Html::Button('保存', ['class' => 'btn btn-primary pull-left','onclick'=>'changeValue()','name' => 'login-button']) ?>
+        <div class="col-xs-12" style="margin-bottom: 15px;margin-top: 15px;">
+            <?= Html::submitButton('保存', ['class' => 'btn btn-primary pull-left','onclick'=>'changeValue()','name' => 'login-button']) ?>
         </div>
     </div>
 
     <?php ActiveForm::end(); ?>
 </div>
-<script>
-var flag=0;
-window.onbeforeunload = function(event){   
-    console.log(flag);
-    if(flag==0) return '您可能有数据没有保存'; 
-};
-</script>

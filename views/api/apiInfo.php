@@ -9,19 +9,31 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php include('_searchApi.php');?>
 <div class="col-xs-9">
     <div class="col-xs-12 padding-5 margin-top-10" style="background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
-        <div class="col-xs-12"><span class="pull-right">最后修改者: root -- <?=$apiInfo->lastTime?></span></div>
+        <div class="col-xs-12">
+            <div class="col-xs-4 pull-right" >最后修改者: <?=Yii::$app->user->identity->username?> -- <?=$model->lastTime?></div>
+        </div>
+        <div class="col-xs-12"><div class="col-xs-4 pull-right native" id="readLogs"><span class="glyphicon glyphicon-plus"></span>&nbsp;查看logs</div></div>
+        <div class="col-xs-4 pull-right" >
+           <div id="logsData" style="display:none;position:absolute;z-index:99;left:10px;top:5px;background:#5cb85c;color:white;padding:2px">
+            <?php
+                foreach ($logsData as $key => $value) {
+                    echo '<div>'.$value->editTime.'--'.$value->content.'</div>';
+                }
+            ?>
+            </div>
+        </div>
         <div class="col-xs-12">
             <h4>
-                <span class="pull-left"><b><?=$apiInfo->apiName?></b>-------编号: <span class="cl-red"><?=$apiInfo->number?></span></span>
-                <span><a href= "<?= Url::to([ 'api/add-api', 'apiId'=>$apiInfo->apiId,'id'=>$_GET['id']]); ?>" class="pull-left btn btn-success" style="padding:2px 5px !important;margin-left:30px">编辑</a ></span>
-                <span><button class="pull-left btn btn-danger" onclick="delApi(<?=$_GET['id']?>,<?=$apiInfo->apiId?>)" style="padding:2px 5px !important;margin-left:30px">删除</button></span>
+                <span class="pull-left"><b><?=$model->apiName?></b>-------编号: <span class="cl-red"><?=$model->number?></span></span>
+                <span><a href= "<?= Url::to([ 'api/add-api', 'apiId'=>$model->apiId,'id'=>$_GET['id']]); ?>" class="pull-left btn btn-success" style="padding:2px 5px !important;margin-left:30px">编辑</a ></span>
+                <span><button class="pull-left btn btn-danger" onclick="delApi(<?=$_GET['id']?>,<?=$model->apiId?>)" style="padding:2px 5px !important;margin-left:30px">删除</button></span>
             </h4> 
         </div>
         <div class="col-xs-12 margin-top-10">
-            <span style="padding:2px;"><b><?=$apiInfo->type?></b></span>--
-            <span style="padding:2px;" id="url"><?=$apiInfo->project->projectHost?><?=$apiInfo->functionName?></span>
+            <span style="padding:2px;"><b><?=$model->type?></b></span>--
+            <span style="padding:2px;" id="url"><?=$model->project->projectHost?><?=$model->functionName?></span>
         </div>
-        <div class="col-xs-12 margin-top-10" ><b>描述</b>：<?=$apiInfo->apiDiscribe?></div>
+        <div class="col-xs-12 margin-top-10" ><b>描述</b>：<?=$model->apiDiscribe?></div>
     </div>
 
     <div class="col-xs-12 padding-5" style="margin:50px 0 0 0;background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
@@ -33,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
               </thead>
               <tbody>
                 <?php
-                    $params0=unserialize($apiInfo->params);
+                    $params0=unserialize($model->params);
                     $pnum0 = count($params0['name']);
                     for( $i=0; $i<$pnum0; $i++ ) {
                 ?>
@@ -54,6 +66,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="col-xs-12 padding-5" style="margin:50px 0 0 0;background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
         <div class="col-xs-12"><h4>返回参数</h4></div>
+        <div class="col-xs-12" style="color:red">
+        <div>默认返回Json形式统一为：{"appStatus":{"errorCode":1,"message":"tips" },"content":[]}</div>
+        <div> errorCode的值为0表示操作成功，1表示操作失败，message是提示信息，下面配置的是content里需要返回的参数信息。</div>
+        </div>
         <div class="col-xs-12">
             <table class="table">
               <thead>
@@ -61,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
               </thead>
               <tbody>
                  <?php
-                    $params=unserialize($apiInfo->returnParams);
+                    $params=unserialize($model->returnParams);
                     $pnum = count($params['name']);
                     for( $i=0; $i<$pnum; $i++ ) {
                         if($params['parent'][$i]=="1"){
@@ -93,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
        <div class="col-xs-12 padding-5" style="margin:50px 0 0 0;background-color: #d9edf7;border-color:#bce8f1;color:#31708f">
         <div class="col-xs-12"><h4>接口测试</h4></div>
         <div class="col-xs-12">
-        <form id="test-form" method="<?=$apiInfo->type?>">
+        <form id="test-form" method="<?=$model->type?>">
             <table class="table">
                 <tr><th>参数</th><th>测试值</th></tr>
                 <?php

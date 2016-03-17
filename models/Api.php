@@ -40,7 +40,7 @@ class Api extends \yii\db\ActiveRecord
             [['lastTime'], 'safe'],
             [['functionName'], 'string', 'max' => 50],
             [['apiName'], 'string', 'max' => 50],
-            [['number', 'type'], 'string', 'max' => 20]
+            [['number', 'type'], 'string', 'max' => 20],
         ];
     }
 
@@ -69,5 +69,9 @@ class Api extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Project::className(), ['projectId' => 'fkProjectId']);
+    }
+
+    public function validateName($attribute, $params){
+        $this->addError($attribute, 'Incorrect username or password.');
     }
 }
