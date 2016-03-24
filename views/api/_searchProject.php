@@ -7,7 +7,7 @@ use yii\widgets\ListView;
 ?>
 <div class="col-xs-3 main-left margin-left-0 pull-left padding-5">
     <div>
-        <div style="margin:20px 0 0 0;">
+        <div style="margin:5px 0 0 0;">
             <div><input type="text" value=""  onkeyup="search($(this).val(),2)"  class="form-control"  placeholder="Search..."></div>
             <?= Html::a('新建项目', ['api/add-project'], ['class' => 'btn btn-success pull-right margin-top-10']) ?>
             <div id="project-list">

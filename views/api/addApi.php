@@ -4,8 +4,8 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
-$this->title = $projectName;
-$this->params['breadcrumbs'][] = $this->title;
+$this->title =  '当前项目--'.$projectName;
+$this->params['breadcrumbs'][] =$this->title;
 ?>
 <?php include('_searchApi.php');?>
 <div class="col-xs-9">
@@ -102,8 +102,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
      <div class="col-xs-12 form-group" style="margin-top:50px">
         <h4>返回参数</h4>
-        <h5 style="color:red">
-        <div>默认返回Json形式统一为：{"appStatus":{"errorCode":1,"message":tips },"content":[]}</div>
+        <h5 style="color:#3170AE">
+        <div><b class="glyphicon glyphicon-list-alt"></b>&nbsp;&nbsp;默认返回Json形式统一为：{"appStatus":{"errorCode":1,"message":tips },"content":[]}</div>
         <div> errorCode的值为0表示操作成功，1表示操作失败，message是提示信息，下面配置的是content里需要返回的参数信息。</div>
         </h5> 
         <table class="table" id="r">
