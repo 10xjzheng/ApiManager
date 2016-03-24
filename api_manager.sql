@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.4.15.5
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: 2016-03-24 10:20:58
--- 服务器版本： 5.6.17
--- PHP Version: 5.5.12
+-- Host: localhost
+-- Generation Time: 2016-03-24 15:18:36
+-- 服务器版本： 5.6.29
+-- PHP Version: 5.6.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `api_manager`
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `api` (
-  `apiId` int(32) unsigned NOT NULL AUTO_INCREMENT,
+  `apiId` int(32) unsigned NOT NULL,
   `fkProjectId` int(20) unsigned NOT NULL,
   `functionName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
   `apiName` varchar(50) COLLATE utf8_czech_ci NOT NULL,
@@ -37,19 +37,8 @@ CREATE TABLE IF NOT EXISTS `api` (
   `returnParams` text COLLATE utf8_czech_ci,
   `type` varchar(20) COLLATE utf8_czech_ci NOT NULL DEFAULT 'GET',
   `userId` int(32) NOT NULL,
-  `lastTime` datetime NOT NULL,
-  PRIMARY KEY (`apiId`),
-  KEY `fkProjectId` (`fkProjectId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=8 ;
-
---
--- 转存表中的数据 `api`
---
-
-INSERT INTO `api` (`apiId`, `fkProjectId`, `functionName`, `apiName`, `apiDiscribe`, `number`, `params`, `returnParams`, `type`, `userId`, `lastTime`) VALUES
-(4, 1, 'GetOrderDetail', '获取订单详情', '获取订单详情', '001', 'a:5:{s:4:"name";a:2:{i:0;s:6:"userId";i:1;s:7:"orderId";}s:9:"paramType";a:2:{i:0;s:3:"int";i:1;s:3:"int";}s:4:"type";a:2:{i:0;s:1:"Y";i:1;s:1:"Y";}s:7:"default";a:2:{i:0;s:0:"";i:1;s:0:"";}s:3:"des";a:2:{i:0;s:8:"用户id";i:1;s:8:"订单id";}}', 'a:6:{s:6:"parent";a:2:{i:0;s:1:"1";i:1;s:1:"1";}s:9:"tableName";a:2:{i:0;s:2:"r0";i:1;s:2:"r1";}s:4:"name";a:2:{i:0;s:8:"orderNum";i:1;s:8:"orderSum";}s:9:"paramType";a:2:{i:0;s:6:"string";i:1;s:6:"string";}s:7:"default";a:2:{i:0;s:0:"";i:1;s:0:"";}s:3:"des";a:2:{i:0;s:12:"订单编号";i:1;s:12:"订单金额";}}', 'POST', 1, '2016-03-17 15:00:13'),
-(6, 1, 'SubmitOrder', '提交订单', '下单接口', '002', 'a:5:{s:4:"name";a:7:{i:0;s:6:"userId";i:1;s:8:"shop_uid";i:2;s:5:"goods";i:3;s:6:"remark";i:4;s:9:"addressId";i:5;s:4:"type";i:6;s:9:"orderType";}s:9:"paramType";a:7:{i:0;s:3:"int";i:1;s:3:"int";i:2;s:6:"string";i:3;s:6:"string";i:4;s:3:"int";i:5;s:6:"string";i:6;s:6:"string";}s:4:"type";a:7:{i:0;s:1:"Y";i:1;s:1:"Y";i:2;s:1:"Y";i:3;s:1:"Y";i:4;s:1:"Y";i:5;s:1:"Y";i:6;s:1:"Y";}s:7:"default";a:7:{i:0;s:0:"";i:1;s:0:"";i:2;s:0:"";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";}s:3:"des";a:7:{i:0;s:8:"用户id";i:1;s:14:"商店用户id";i:2;s:56:"商品json格式：\r\n[{"id": 1,"num": 2，"price": 12 }]";i:3;s:6:"备注";i:4;s:8:"地址id";i:5;s:46:"付款方式 0:货到付款，1：在线支付";i:6;s:36:"1:购物车下单，2：立即下单";}}', 'a:6:{s:6:"parent";a:3:{i:0;s:1:"1";i:1;s:1:"1";i:2;s:1:"1";}s:9:"tableName";a:3:{i:0;s:2:"r0";i:1;s:2:"r1";i:2;s:2:"r2";}s:4:"name";a:3:{i:0;s:9:"order_num";i:1;s:8:"order_id";i:2;s:9:"order_sum";}s:9:"paramType";a:3:{i:0;s:6:"string";i:1;s:6:"string";i:2;s:6:"string";}s:7:"default";a:3:{i:0;s:0:"";i:1;s:0:"";i:2;s:0:"";}s:3:"des";a:3:{i:0;s:12:"订单编号";i:1;s:8:"订单id";i:2;s:12:"订单金额";}}', 'POST', 1, '2016-03-17 19:12:55'),
-(7, 1, 'GetUserInfo', '获取用户信息', '', '003', 'a:5:{s:4:"name";a:1:{i:0;s:6:"userId";}s:9:"paramType";a:1:{i:0;s:3:"int";}s:4:"type";a:1:{i:0;s:1:"Y";}s:7:"default";a:1:{i:0;s:0:"";}s:3:"des";a:1:{i:0;s:8:"用户id";}}', 'a:6:{s:9:"tableName";a:1:{i:0;s:2:"r0";}s:6:"parent";a:1:{i:0;s:1:"1";}s:4:"name";a:1:{i:0;s:8:"username";}s:9:"paramType";a:1:{i:0;s:6:"string";}s:7:"default";a:1:{i:0;s:0:"";}s:3:"des";a:1:{i:0;s:12:"用户名称";}}', 'GET', 1, '2016-03-17 19:14:17');
+  `lastTime` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 -- --------------------------------------------------------
 
@@ -60,8 +49,7 @@ INSERT INTO `api` (`apiId`, `fkProjectId`, `functionName`, `apiName`, `apiDiscri
 CREATE TABLE IF NOT EXISTS `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`item_name`,`user_id`)
+  `created_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -77,10 +65,7 @@ CREATE TABLE IF NOT EXISTS `auth_item` (
   `rule_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` text COLLATE utf8_unicode_ci,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`name`),
-  KEY `rule_name` (`rule_name`),
-  KEY `idx-auth_item-type` (`type`)
+  `updated_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -91,9 +76,7 @@ CREATE TABLE IF NOT EXISTS `auth_item` (
 
 CREATE TABLE IF NOT EXISTS `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`)
+  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -106,8 +89,7 @@ CREATE TABLE IF NOT EXISTS `auth_rule` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `data` text COLLATE utf8_unicode_ci,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`name`)
+  `updated_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -118,8 +100,7 @@ CREATE TABLE IF NOT EXISTS `auth_rule` (
 
 CREATE TABLE IF NOT EXISTS `migration` (
   `version` varchar(180) COLLATE utf8_czech_ci NOT NULL,
-  `apply_time` int(11) DEFAULT NULL,
-  PRIMARY KEY (`version`)
+  `apply_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 --
@@ -137,13 +118,12 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `modify_logs` (
-  `id` int(32) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(32) unsigned NOT NULL,
   `userId` int(10) unsigned NOT NULL,
   `editTime` datetime NOT NULL,
   `content` text COLLATE utf8_czech_ci NOT NULL,
-  `apiId` int(30) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=11 ;
+  `apiId` int(30) unsigned NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 --
 -- 转存表中的数据 `modify_logs`
@@ -168,20 +148,11 @@ INSERT INTO `modify_logs` (`id`, `userId`, `editTime`, `content`, `apiId`) VALUE
 --
 
 CREATE TABLE IF NOT EXISTS `project` (
-  `projectId` int(20) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` int(20) unsigned NOT NULL,
   `projectName` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `projectHost` varchar(80) COLLATE utf8_czech_ci NOT NULL,
-  `discribe` text COLLATE utf8_czech_ci,
-  PRIMARY KEY (`projectId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='项目表' AUTO_INCREMENT=3 ;
-
---
--- 转存表中的数据 `project`
---
-
-INSERT INTO `project` (`projectId`, `projectName`, `projectHost`, `discribe`) VALUES
-(1, '消费保', 'http://ibona.f3322.net:8088/XiaoFeiBao/', '测试接口'),
-(2, '百港汇', 'http://m.bganghui.com/index.php/Admin/Interface/', '');
+  `discribe` text COLLATE utf8_czech_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='项目表';
 
 -- --------------------------------------------------------
 
@@ -190,22 +161,107 @@ INSERT INTO `project` (`projectId`, `projectName`, `projectHost`, `discribe`) VA
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(15) NOT NULL AUTO_INCREMENT,
+  `id` int(15) NOT NULL,
   `username` varchar(20) COLLATE utf8_czech_ci NOT NULL,
   `password` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `auth_key` varchar(32) COLLATE utf8_czech_ci NOT NULL,
-  `password_reset_token` varchar(255) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=3 ;
+  `password_reset_token` varchar(255) COLLATE utf8_czech_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 --
 -- 转存表中的数据 `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `auth_key`, `password_reset_token`) VALUES
-(1, 'admin', '123456', '', ''),
-(2, 'demo', 'demo', '', '');
+(1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', ''),
+(2, 'demo', 'e10adc3949ba59abbe56e057f20f883e', '', '');
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `api`
+--
+ALTER TABLE `api`
+  ADD PRIMARY KEY (`apiId`),
+  ADD KEY `fkProjectId` (`fkProjectId`);
+
+--
+-- Indexes for table `auth_assignment`
+--
+ALTER TABLE `auth_assignment`
+  ADD PRIMARY KEY (`item_name`,`user_id`);
+
+--
+-- Indexes for table `auth_item`
+--
+ALTER TABLE `auth_item`
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `rule_name` (`rule_name`),
+  ADD KEY `idx-auth_item-type` (`type`);
+
+--
+-- Indexes for table `auth_item_child`
+--
+ALTER TABLE `auth_item_child`
+  ADD PRIMARY KEY (`parent`,`child`),
+  ADD KEY `child` (`child`);
+
+--
+-- Indexes for table `auth_rule`
+--
+ALTER TABLE `auth_rule`
+  ADD PRIMARY KEY (`name`);
+
+--
+-- Indexes for table `migration`
+--
+ALTER TABLE `migration`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- Indexes for table `modify_logs`
+--
+ALTER TABLE `modify_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `project`
+--
+ALTER TABLE `project`
+  ADD PRIMARY KEY (`projectId`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `api`
+--
+ALTER TABLE `api`
+  MODIFY `apiId` int(32) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `modify_logs`
+--
+ALTER TABLE `modify_logs`
+  MODIFY `id` int(32) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `project`
+--
+ALTER TABLE `project`
+  MODIFY `projectId` int(20) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- 限制导出的表
 --
